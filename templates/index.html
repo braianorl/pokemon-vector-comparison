@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Duel Comparison</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Chart.js for the Radar Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+    <div class="background-overlay">
+        <div class="comparison-container">
+            <header class="main-title">
+                <h1>Pokémon Duel Comparison</h1>
+            </header>
+
+            <!-- Battle Arena using Grid Template Areas -->
+            <div class="battle-arena">
+                <!-- Pokemon 1 Slot -->
+                <div class="slot-container left empty" id="slot-1">
+                    <div class="pokemon-display">
+                        <div class="pokemon-sprite-container">
+                            <div class="pokeball-bg"></div>
+                            <img src="" alt="" class="sprite-img" style="display: none;">
+                        </div>
+                        <div id="slot-1" class="pokemon-card empty"> <div class="name-container">
+                            <span class="chart-dot"></span> <h2 class="pokemon-name"></h2>
+                        </div>
+                        </div>
+                        <div class="pokemon-id"></div>
+                        <div class="pokemon-type"></div>
+                    </div>
+                    <button id="btn-slot-1" class="add-btn" onclick="openSearch(1)">
+                        <i class="ph-bold ph-plus"></i> 
+                        <span>Select</span>
+                    </button>
+                </div>
+
+                <!-- Radar Chart Section -->
+                <div class="radar-placeholder">
+                    <div class="radar-chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Pokemon 2 Slot -->
+                <div class="slot-container right empty" id="slot-2">
+                    <div class="pokemon-display">
+                        <div class="pokemon-sprite-container">
+                            <div class="pokeball-bg"></div>
+                            <img src="" alt="" class="sprite-img" style="display: none;">
+                        </div>
+                        <div id="slot-2" class="pokemon-card empty"> <div class="name-container">
+                            <span class="chart-dot"></span> <h2 class="pokemon-name"></h2>
+                        </div>
+                        </div>
+                        <div class="pokemon-id"></div>
+                        <div class="pokemon-type"></div>
+                    </div>
+                    <button id="btn-slot-2" class="add-btn" onclick="openSearch(2)">
+                        <i class="ph-bold ph-plus"></i> 
+                        <span>Select</span>
+                    </button>
+                </div>
+            </div>
+            <div class="divider"></div>
+
+            <!-- Stats Comparison Table -->
+            <section class="info-comparison">
+                <h2 class="section-title">Pokémon information stats</h2>
+                
+                <div class="stats-table">
+                    <!-- Height & Weight -->
+                    <div class="stat-row">
+                        <span class="stat-val left" id="val-height-1">-</span>
+                        <span class="stat-label">Height</span>
+                        <span class="stat-val right" id="val-height-2">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-val left" id="val-weight-1">-</span>
+                        <span class="stat-label">Weight</span>
+                        <span class="stat-val right" id="val-weight-2">-</span>
+                    </div>
+
+                    <!-- HP -->
+                    <div class="stat-row with-bars">
+                        <div class="bar-container left">
+                            <div class="bar-track"><div id="bar-hp-1" class="bar-fill"></div></div>
+                        </div>
+                        <span class="stat-val left" id="val-hp-1">-</span>
+                        <span class="stat-label">HP</span>
+                        <span class="stat-val right" id="val-hp-2">-</span>
+                        <div class="bar-container right">
+                            <div class="bar-track"><div id="bar-hp-2" class="bar-fill"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Attack -->
+                    <div class="stat-row with-bars">
+                        <div class="bar-container left">
+                            <div class="bar-track"><div id="bar-atk-1" class="bar-fill"></div></div>
+                        </div>
+                        <span class="stat-val left" id="val-atk-1">-</span>
+                        <span class="stat-label">Attack</span>
+                        <span class="stat-val right" id="val-atk-2">-</span>
+                        <div class="bar-container right">
+                            <div class="bar-track"><div id="bar-atk-2" class="bar-fill"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Defense -->
+                    <div class="stat-row with-bars">
+                        <div class="bar-container left">
+                            <div class="bar-track"><div id="bar-def-1" class="bar-fill"></div></div>
+                        </div>
+                        <span class="stat-val left" id="val-def-1">-</span>
+                        <span class="stat-label">Defense</span>
+                        <span class="stat-val right" id="val-def-2">-</span>
+                        <div class="bar-container right">
+                            <div class="bar-track"><div id="bar-def-2" class="bar-fill"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Special Attack -->
+                    <div class="stat-row with-bars">
+                        <div class="bar-container left">
+                            <div class="bar-track"><div id="bar-spAtk-1" class="bar-fill"></div></div>
+                        </div>
+                        <span class="stat-val left" id="val-spAtk-1">-</span>
+                        <span class="stat-label">Special attack</span>
+                        <span class="stat-val right" id="val-spAtk-2">-</span>
+                        <div class="bar-container right">
+                            <div class="bar-track"><div id="bar-spAtk-2" class="bar-fill"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Special Defense -->
+                    <div class="stat-row with-bars">
+                        <div class="bar-container left">
+                            <div class="bar-track"><div id="bar-spDef-1" class="bar-fill"></div></div>
+                        </div>
+                        <span class="stat-val left" id="val-spDef-1">-</span>
+                        <span class="stat-label">Special defense</span>
+                        <span class="stat-val right" id="val-spDef-2">-</span>
+                        <div class="bar-container right">
+                            <div class="bar-track"><div id="bar-spDef-2" class="bar-fill"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Speed -->
+                    <div class="stat-row with-bars">
+                        <div class="bar-container left">
+                            <div class="bar-track"><div id="bar-spd-1" class="bar-fill"></div></div>
+                        </div>
+                        <span class="stat-val left" id="val-spd-1">-</span>
+                        <span class="stat-label">Speed</span>
+                        <span class="stat-val right" id="val-spd-2">-</span>
+                        <div class="bar-container right">
+                            <div class="bar-track"><div id="bar-spd-2" class="bar-fill"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="stat-row with-bars">
+                        <div class="bar-container left">
+                            <div class="bar-track"><div id="bar-total-1" class="bar-fill"></div></div>
+                        </div>
+                        <span class="stat-val left" id="val-total-1">-</span>
+                        <span class="stat-label">Power level</span>
+                        <span class="stat-val right" id="val-total-2">-</span>
+                        <div class="bar-container right">
+                            <div class="bar-track"><div id="bar-total-2" class="bar-fill"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    
+
+    <script src="static/js/mockdata.js"></script>
+    <script src="static/js/script.js"></script>
+    
+    <div id="search-palette" class="palette-overlay" style="display: none;">
+        <div class="palette-container">
+            <div class="palette-header">
+                <input type="text" 
+                       id="pokemon-search-input" 
+                       placeholder="Search Pokemon..." 
+                       autocomplete="off"
+                       name="q"
+                       hx-get="{% url 'search' %}" 
+                       hx-trigger="keyup changed delay:500ms" 
+                       hx-target="#search-results"
+                >
+            </div>
+            
+            <div id="search-results" class="palette-results"></div>
+        </div>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% if pokemons %}
+    {% for p in pokemons %}
+    <div class="result-item" 
+         onclick="selectPokemon('{{ p.id }}')" 
+         style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #333;">
+        
+        <img src="{{ p.sprite_animated }}" width="40" style="image-rendering: pixelated;">
+        
+        <div style="color: white;">
+            <span style="color: #666; font-size: 0.8em;">#{{ p.id }}</span>
+            <strong>{{ p.name }}</strong>
+        </div>
+        
+        <div style="margin-left: auto;">
+             <span class="type-badge {{ p.type_1 }}">{{ p.type_1 }}</span>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div style="padding: 20px; color: #666; text-align: center;">
+        Nenhum Pokémon encontrado...
+    </div>
+{% endif %}
